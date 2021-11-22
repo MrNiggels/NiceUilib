@@ -2448,9 +2448,17 @@ ui = {} do
  hideTooltip()
  end)
  
- 
- 
+ local oldScroll = menu_scroll.Visible
+ local oldSize = menu_menu.CanvasSize
  local function open() 
+  
+  oldScroll = menu_scroll.Visible
+  oldSize = menu_menu.CanvasSize
+  local amount = #options
+  menu_menu.CanvasSize = menu_menu.CanvasSize + UDim2.new(0, 0, 0, 28*amount)
+
+
+  menu_scroll.Visible = true
  twn(dropdown_arrow, {Rotation = 360})
  twn(dropdown_container, {Size = UDim2.new(dropdown_button.Size.X, UDim.new(0, (#options*28)+15))})
  twn(dropdown_button, {BackgroundColor3 = ui.colors.enabled})
@@ -2461,11 +2469,12 @@ ui = {} do
  end
  
  local function close() 
+
  twn(dropdown_arrow, {Rotation = 180})
  twn(dropdown_container, {Size = UDim2.new(dropdown_button.Size.X, UDim.new(0, 0))})
  twn(dropdown_button, {BackgroundColor3 = ui.colors.button})
- 
- 
+ menu_menu.CanvasSize = oldSize
+ menu_scroll.Visible = oldScroll 
  OnClose:Fire()
  OnToggle:Fire(false)
  end
@@ -2479,6 +2488,72 @@ ui = {} do
  end
  end
  
+
+ local function create(t)
+
+  options = t or options
+  
+  for i, v in pairs(options) do
+    local dropdown_option = Instance.new("TextButton")
+    tinsert(options_buttons, dropdown_option)
+    dropdown_option.Text = v
+    dropdown_option.AutoButtonColor = false
+    dropdown_option.ClipsDescendants = true
+    dropdown_option.BackgroundTransparency = 0.7
+    dropdown_option.BackgroundColor3 = ui.colors.button
+    dropdown_option.TextColor3 = ui.colors.text
+    dropdown_option.Font = ui.Font
+    dropdown_option.TextXAlignment = Enum.TextXAlignment.Left
+    dropdown_option.TextSize = ui.FontSize
+    dropdown_option.Size = UDim2.new(0, dropdown_container.AbsoluteSize.X - 30, 0, 24)
+    dropdown_option.Position = UDim2.new(0, 15, 0, ((i - 1) * 28) + 8)
+    dropdown_option.ZIndex = 25
+    dropdown_option.Parent = dropdown_container
+    round(dropdown_option)
+    local dropdown_pad = Instance.new("UIPadding")
+    dropdown_pad.PaddingLeft = UDim.new(0, 10)
+    dropdown_pad.Parent = dropdown_option
+    dropdown_option.MouseEnter:Connect(function()
+      twn(dropdown_option, {
+        BackgroundTransparency = 0.4
+      })
+    end)
+    dropdown_option.MouseLeave:Connect(function()
+      twn(dropdown_option, {
+        BackgroundTransparency = 0.7
+      })
+    end)
+    dropdown_option.MouseButton1Click:Connect(function()
+      ceffect(dropdown_option)
+      for i, v in pairs(options_buttons) do
+        twn(v, {
+          BackgroundColor3 = ui.colors.button,
+          BackgroundTransparency = 0.7
+        })
+      end
+      twn(dropdown_option, {
+        BackgroundColor3 = ui.colors.enabled,
+        BackgroundTransparency = 0.4
+      })
+      selection = {
+        v,
+        i
+      }
+      dropdown_button.Text = text .. " (" .. tostring(selection[1]) .. ")"
+      OnSelection:Fire(unpack(selection))
+    end)
+    if i == 1 then
+      dropdown_option.BackgroundColor3 = ui.colors.enabled
+      dropdown_option.BackgroundTransparency = 0.4
+      selection = {
+        v,
+        i
+      }
+    end
+  end
+  end
+
+
  local function newoption(i,v) 
  local dropdown_option = Instance.new("TextButton")
  dropdown_option.Text = v
@@ -2551,11 +2626,12 @@ ui = {} do
  
  
  
- 
+ --[[
  for i,v in pairs(options) do
  newoption(i,v)
  end
- 
+ --]]
+ create(options)
  
  
  tinsert(menu_objects, 7)
@@ -2661,13 +2737,17 @@ ui = {} do
  
  end
  
- function t:SetOptions(options)
- for i = #options_buttons, 1, -1 do
- t:RemoveOption(i) 
- end
- for _,v in ipairs(options) do
- t:AddOption(v) 
- end
+ function t:SetOptions(t)
+  for i,v in next, options_buttons do
+    v:Destroy()
+  end
+  task.wait()
+  for i,v in next, options_buttons do
+    table.remove(options_buttons, i)
+  end
+  task.wait(0.1)
+  create(t)
+  if open_state then open() else close() end
  end
  
  function t:AddOption(name) 
