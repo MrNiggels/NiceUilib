@@ -2020,14 +2020,6 @@ ui = {} do
  min = min or 0
  max = max or 100
  start = start or min
- 
- 
- if max > 999 then max = 999
- elseif max < 1 then max = 1
- end
- if min >= max then min = max-1
- elseif min < 0 then min = 0
- end
 
  start = math.clamp(start, min, max)
  
