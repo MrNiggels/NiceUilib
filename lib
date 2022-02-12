@@ -161,7 +161,7 @@ function drag(detect, target)
  
  
  detect.InputBegan:Connect(function(old_input)
- if old_input.UserInputType == Enum.UserInputType.MouseButton1 or old_input.UserInputType == Enum.UserInputType.Touch then
+ if old_input.UserInputType == Enum.UserInputType.MouseButton1 then
  local starting_pos = target.Position
  
  local previnput = old_input.Position
@@ -169,7 +169,7 @@ function drag(detect, target)
  
  ui.cons[id] = uis.InputChanged:Connect(function(new_input)
  
- if new_input.UserInputType == Enum.UserInputType.MouseMovement or new_input.UserInputType == Enum.UserInputType.Touch  then
+ if new_input.UserInputType == Enum.UserInputType.MouseMovement  then
  
  
  local delta = new_input.Position - old_input.Position
@@ -190,7 +190,7 @@ function drag(detect, target)
  end)
  
  detect.InputEnded:Connect(function(cur_input)
- if cur_input.UserInputType == Enum.UserInputType.MouseButton1 or cur_input.UserInputType == Enum.UserInputType.Touch then
+ if cur_input.UserInputType == Enum.UserInputType.MouseButton1 then
  pcall(function() ui.cons[id]:Disconnect() end)
  end
  end)
@@ -204,7 +204,7 @@ function rdrag(detect, target)
  ui.cons[id] = nil
  
  detect.InputBegan:Connect(function(old_input)
- if old_input.UserInputType == Enum.UserInputType.MouseButton1  or old_input.UserInputType == Enum.UserInputType.Touch then
+ if old_input.UserInputType == Enum.UserInputType.MouseButton1  then
  local starting_pos = target.Position
  
  local previnput = old_input.Position
@@ -212,7 +212,7 @@ function rdrag(detect, target)
  
  ui.cons[id] = uis.InputChanged:Connect(function(new_input)
  
- if new_input.UserInputType == Enum.UserInputType.MouseMovement or new_input.UserInputType == Enum.UserInputType.Touch then
+ if new_input.UserInputType == Enum.UserInputType.MouseMovement then
  
  
  local delta = new_input.Position - old_input.Position
@@ -236,7 +236,7 @@ function rdrag(detect, target)
  end)
  
  detect.InputEnded:Connect(function(cur_input)
- if cur_input.UserInputType == Enum.UserInputType.MouseButton1 or cur_input.UserInputType == Enum.UserInputType.Touch then
+ if cur_input.UserInputType == Enum.UserInputType.MouseButton1 then
  pcall(function() ui.cons[id]:Disconnect() end)
  end
  end)
