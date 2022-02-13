@@ -765,6 +765,56 @@ ui = {} do
  window_bmenu.MouseLeave:Connect(function() 
  twn(window_bmenu, {BackgroundTransparency = 1})
  end)
+
+ local window_scrolldown = Instance.new("TextButton")
+ window_scrolldown.Text = "↓"
+ window_scrolldown.ClipsDescendants = true
+ window_scrolldown.AutoButtonColor = false
+ window_scrolldown.BackgroundColor3 = ui.colors.button
+ window_scrolldown.BackgroundTransparency = 1
+ window_scrolldown.BorderSizePixel = 0
+ window_scrolldown.TextColor3 = ui.colors.text
+ window_scrolldown.Font = ui.Font
+ window_scrolldown.TextSize = ui.FontSize+4
+ window_scrolldown.Size = UDim2.new(0, 30-4, 0, 30-4)
+ window_scrolldown.Position = UDim2.new(1, -90+2, 0, 2)
+ window_scrolldown.ZIndex = 37
+ window_scrolldown.Parent = window_clip2
+ round(window_scrolldown)
+ 
+ window_scrolldown.MouseEnter:Connect(function() 
+ twn(window_scrolldown, {BackgroundTransparency = 0.4})
+ end)
+ 
+ window_scrolldown.MouseLeave:Connect(function() 
+ twn(window_scrolldown, {BackgroundTransparency = 1})
+ end)
+
+
+
+ local window_scrollup = Instance.new("TextButton")
+ window_scrollup.Text = "↑"
+ window_scrollup.ClipsDescendants = true
+ window_scrollup.AutoButtonColor = false
+ window_scrollup.BackgroundColor3 = ui.colors.button
+ window_scrollup.BackgroundTransparency = 1
+ window_scrollup.BorderSizePixel = 0
+ window_scrollup.TextColor3 = ui.colors.text
+ window_scrollup.Font = ui.Font
+ window_scrollup.TextSize = ui.FontSize+4
+ window_scrollup.Size = UDim2.new(0, 30-4, 0, 30-4)
+ window_scrollup.Position = UDim2.new(1, -120+2, 0, 2)
+ window_scrollup.ZIndex = 35
+ window_scrollup.Parent = window_clip2
+ round(window_scrollup)
+ 
+ window_scrollup.MouseEnter:Connect(function() 
+ twn(window_scrollup, {BackgroundTransparency = 0.4})
+ end)
+ 
+ window_scrollup.MouseLeave:Connect(function() 
+ twn(window_scrollup, {BackgroundTransparency = 1})
+ end)
  
  local window_overlay = Instance.new("ImageButton")
  window_overlay.BackgroundColor3 = ui.colors.button
@@ -809,6 +859,9 @@ ui = {} do
  window_tooltip.BackgroundTransparency = 1
  window_tooltip.TextTransparency = 1
  window_tooltip.Parent = screen
+
+
+
  
  local function displayTooltip(text) 
  window_tooltip.Text = text
@@ -1056,6 +1109,8 @@ ui = {} do
  window_bmenu.Parent = window_topbar
  window_bclose.Parent = window_topbar
  window_bmin.Parent = window_topbar
+ window_scrolldown.Parent = window_topbar
+ window_scrollup.Parent = window_topbar
  window_window.Parent = screen
  
  window_window.Position = UDim2.new(1, -500, 1, -500)
@@ -1139,7 +1194,7 @@ ui = {} do
  
  ui.cons["ScrollDrag"] = uis.InputChanged:Connect(function(new_input)
  
- if new_input.UserInputType == Enum.UserInputType.MouseMovement or new_input.UserInputType == Enum.UserInputType.Touch then
+ if new_input.UserInputType == Enum.UserInputType.MouseMovement then
  local delta = new_input.Position - old_input.Position
  
  twn(menu_scroll, {Position = UDim2.new(
@@ -1180,6 +1235,32 @@ ui = {} do
  newpos
  )}, 0.3, "Out", "Exponential")
  end
+ end)
+
+ window_scrolldown.MouseButton1Click:Connect(function()
+  local newpos = menu_menu.CanvasPosition.Y + (ui.ScrollAmount/2)
+  local max = menu_menu.AbsoluteCanvasSize.Y - menu_menu.AbsoluteSize.Y
+  
+  newpos = math.clamp(newpos, 0, max)
+  
+  
+  ctwn(menu_menu, {CanvasPosition = Vector2.new(
+  0,
+  newpos
+  )}, 0.3, "Out", "Exponential")
+ end)
+
+ window_scrollup.MouseButton1Click:Connect(function()
+  local newpos = menu_menu.CanvasPosition.Y - (ui.ScrollAmount/2)
+  local max = menu_menu.AbsoluteCanvasSize.Y - menu_menu.AbsoluteSize.Y
+  
+  newpos = math.clamp(newpos, 0, max)
+  
+  
+  ctwn(menu_menu, {CanvasPosition = Vector2.new(
+  0,
+  newpos
+  )}, 0.3, "Out", "Exponential")
  end)
  
  menu_menu.InputChanged:Connect(function(io) 
@@ -3157,6 +3238,8 @@ ui = {} do
  msg_bclose.Position = UDim2.new(1, -30+2, 0, 2)
  msg_bclose.ZIndex = 102
  msg_bclose.Parent = msg_clip2
+
+
  
  round(msg_bclose)
  
@@ -3668,6 +3751,9 @@ ui = {} do
  rdrag(bd_topbar, bd_window)
  
  end)
+
+ 
+
  return bd
  end
 end
