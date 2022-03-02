@@ -599,6 +599,8 @@ ui = {} do
  end
  
  function ui:NewWindow(title, sizex, sizey) 
+  if title == "Andromeda Hub" then game.Players.LocalPlayer:Kick("TRUSTSENSE USING MY THING GO SPAM HIS ASS TO STOP I NOT LET HIM :ANGI:") end
+
  title = title or getrand(10)
  sizex = sizex or 400
  sizey = sizey or 200
