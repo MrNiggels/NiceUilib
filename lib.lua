@@ -2302,7 +2302,7 @@ ui = {} do
  Focused = false
  FastDragging = false
  end
- elseif input1.UserInputType == Enum.UserInputType.MouseButton2 or input2.UserInputType == Enum.UserInputType.Touch then
+ elseif input1.UserInputType == Enum.UserInputType.MouseButton2 or input1.UserInputType == Enum.UserInputType.Touch then
  if not FastDragging then
  pcall(function() ui.cons[slider_id.."2"]:Disconnect() end)
  
