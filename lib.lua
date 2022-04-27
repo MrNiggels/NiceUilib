@@ -598,6 +598,10 @@ ui = {} do
  end
  end
  
+ function ui:destroy()
+  screen:Destroy()
+  end
+ 
  function ui:NewWindow(title, sizex, sizey) 
 
  title = title or getrand(10)
